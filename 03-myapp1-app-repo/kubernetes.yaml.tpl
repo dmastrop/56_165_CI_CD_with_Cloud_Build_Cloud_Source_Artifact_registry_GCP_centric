@@ -17,6 +17,7 @@ spec:
       containers:
       - name: myapp1
         image: us-central1-docker.pkg.dev/GOOGLE_CLOUD_PROJECT/myapps-repository/myapp1:COMMIT_SHA
+        # this is the critical element. myapps-repository is the artifact repo.
         ports:
         - containerPort: 80
 ---
