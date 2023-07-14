@@ -3,6 +3,11 @@ steps:
 # this is executed on Cloud Build
 # This step deploys the new version of our container image
 # in the "standard-cluster-private-1" Google Kubernetes Engine cluster.
+# Remember: the trigger for deployment on Cloud Build points to this cloudbuild-deploy.yaml 
+# the push to the myapp1-k8s-repo triggers this deployment (see Cloud Build triggers)
+# the Cloud Builld trigger also has the location of this yaml as on the myapp1-k8s-repo.
+# the previous cloudbuild.yaml created the updated kubernetes.yaml and pushed it to the myapp1-k8s-repo
+# So the Cloud Build has full access to this file to deploy the actual cluster (see below).
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
   args:

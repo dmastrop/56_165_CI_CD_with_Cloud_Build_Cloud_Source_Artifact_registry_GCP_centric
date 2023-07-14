@@ -23,8 +23,14 @@ steps:
 
 
 # [START cloudbuild-trigger-cd]
+# Remember: the trigger for CI on Cloud Build points to this cloudbuild.yaml  on the myapp1-app-repo.
 # This step clones the myapp1-k8s-repo repository
+# clone to the Cloud Build
+# it checks out the candidate branch.
+# this is so that it can get the kubernetes.yaml file on the myapp1-k8s-repo for the deployment phase
+# This prep involves a push the kubernetes.yaml file to the repo.
 - name: 'gcr.io/cloud-builders/gcloud'
+# use gcloud command
   id: Clone myapp1-k8s-repo repository
   entrypoint: /bin/sh
   args:
@@ -35,7 +41,12 @@ steps:
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 # This step generates the new manifest
+# this uses the  newly added kubernetes.yaml.tpl file that we
+# add the the myapp1-app-repo Cloud Source repo that is used for the CI
 - name: 'gcr.io/cloud-builders/gcloud'
+# use gcloud command
+# this dynamically generates the new K8s manifest based on the latest SHA docker image and the 
+# current GOOGLE_CLOUD_PROJECT(PROJECT_ID). The new file named kubernetes.yaml in directory myapp1-k8s-repo
   id: Generate Kubernetes manifest
   entrypoint: /bin/sh
   args:
@@ -43,7 +54,12 @@ steps:
   - |
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
      sed "s/COMMIT_SHA/${SHORT_SHA}/g" > myapp1-k8s-repo/kubernetes.yaml
-# This step pushes the manifest back to myapp1-k8s-repo
+# This step pushes the manifest back to myapp1-k8s-repo candidate branch
+# remember that Cloud Build SA has commit and access writes to this repo
+# the Cloud Build trigger (cloudbuild-delivery.yaml) for the actual deployment will need this yaml file
+# to deploy the cluster.
+# NOTE that the push here to the myapp1-k8s-repo to candidate will trigger the CD per the Cloud Build trigger
+# the deployment trigger will take over (cloudbuild-delivery.yaml)
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Push manifest
   entrypoint: /bin/sh
