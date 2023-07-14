@@ -1,5 +1,7 @@
 This is a complete CI/CD pipeline implementation using GCP (Google) platform. There is no github actions, Jenkins, travis CI involved.
 
+NOTE: the project intentionally focuses on the CI/CD pipeline mechanism and not on source code. The source code apsect is very simple. When testing gets integrated into this project  (see below) the nature of the source code (nodejs, etc) and the complexity of the K8s cluster pods/applications becomes much more important relative to the complexity of the test suite(s) design.
+
 The three major components involved are the Google Artifact Registry (like docker hub), Google Cloud Build (to stage the CI and CD jobs and configure the relevant triggers based on the cloudbuild yaml scripts), and Google Cloud Source
 Note that the Cloud Build SA (service account) must be given Kubernetes Admin role permission and write/push permissions to Cloud Source for this implementation to work.
 
