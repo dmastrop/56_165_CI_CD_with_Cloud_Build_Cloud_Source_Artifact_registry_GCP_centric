@@ -1,1 +1,8 @@
 Note that cloudbuild-trigger and cloudbuild have the exact same content.
+kubernetes.yaml.tpl is a template that CI phase uses to create the kubnernetes.yaml file with the lastest SHA tagged image. This kubernetes.yaml is used in CD phase for deployment.
+
+The myapp1-app-repo is for CI phase and has cloudbuild.yaml (5 steps)
+The mayapp1-k8s-repo is for CD phase and has kubernetes.yaml and the cloudbuild-delivery.yaml (2 steps)
+
+These 2 repos are on Cloud Source not on github.
+These files here (source files) are hosted on github in this project.
